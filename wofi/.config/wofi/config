@@ -1,0 +1,9 @@
+width=600
+height=400
+mode=drun
+insensitive=true
+parse_search=true
+matching=multi-contains
+colors=colors
+filter_rate=20
+allow_images=true

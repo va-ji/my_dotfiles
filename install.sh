@@ -5,7 +5,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGES=(nvim tmux sway)
+PACKAGES=(nvim tmux sway wofi waybar mako alacritty)
 
 log() { printf '\n\033[1;34m==> %s\033[0m\n' "$*"; }
 
@@ -19,7 +19,8 @@ sudo dnf install -y \
   git stow curl unzip make gcc cmake \
   neovim ripgrep fd-find fzf nodejs-npm python3 \
   tmux wl-clipboard \
-  sway swaylock swayidle waybar wofi foot grim slurp mako
+  sway swaylock-effects swayidle waybar wofi foot grim slurp mako \
+  alacritty sway-screenshot pavucontrol network-manager-applet
 
 log "Seeding a sway config if the repo has none"
 if [[ ! -e "$DOTFILES/sway/.config/sway/config" ]]; then
