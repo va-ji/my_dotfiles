@@ -22,26 +22,28 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $powermenu sh ~/.config/wofi/wofi-powermenu
+set $configmenu bash ~/.config/wofi/wofi-configmenu
 set $term alacritty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 set $menu wofi --style=$HOME/.config/wofi/style.css --conf=$HOME/.config/wofi/config
 
-set $lock_screen  swaylock -f \
-	--screenshots \
-	--clock \
-	--indicator \
+# Upstream swaylock (Fedora repo). The pgrep guard prevents a second instance
+# when swayidle's before-sleep fires while the 300s idle lock is already up.
+set $lock_screen  pgrep -x swaylock >/dev/null || swaylock -f \
+	--image /usr/share/backgrounds/sway/background.jpg \
+	--scaling fill \
+	--color 000000 \
+	--indicator-idle-visible \
+	--show-failed-attempts \
 	--indicator-radius 100 \
 	--indicator-thickness 7 \
-	--effect-blur 7x5 \
-	--effect-vignette 0.5:0.5 \
 	--ring-color bb00cc \
 	--key-hl-color 880033 \
 	--line-color 00000000 \
 	--inside-color 00000088 \
-	--separator-color 00000000 \
-	--grace 2 
+	--separator-color 00000000
 
 ### Output configuration
 #
@@ -55,7 +57,7 @@ output * bg /usr/share/backgrounds/sway/background.jpg fill
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
 ### Idle configuration
- exec_always swayidle -w \
+ exec swayidle -w \
           timeout 300 '$lock_screen' \
    timeout 400 'systemctl suspend' \
    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'\
@@ -139,6 +141,9 @@ input * accel_profile flat
     
     #start power menu
     bindsym $mod+p exec $powermenu
+
+    #start config editor menu
+    bindsym $mod+c exec $configmenu
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.

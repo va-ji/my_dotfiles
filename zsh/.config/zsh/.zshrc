@@ -16,8 +16,8 @@ export VISUAL=nvim
 
 # --- History (set before Oh My Zsh so it keeps these) -----------------------
 HISTFILE="$ZDOTDIR/.zsh_history"     # ignored by git (see .gitignore)
-HISTSIZE=50000
-SAVEHIST=50000
+HISTSIZE=90000
+SAVEHIST=90000
 
 # --- Oh My Zsh --------------------------------------------------------------
 # Cloned by install.sh (not the official installer, which would overwrite this file).
@@ -35,7 +35,6 @@ plugins=(
 setopt HIST_IGNORE_ALL_DUPS          # keep only the newest copy of a repeated command
 setopt INTERACTIVE_COMMENTS          # allow # comments on the command line, like bash
 alias ll='ls -lah'
-alias vim='nvim'
 
 # --- fzf --------------------------------------------------------------------
 # Ctrl-R fuzzy history, Ctrl-T fuzzy file picker, Alt-C fuzzy cd, `**<Tab>`.
@@ -53,6 +52,12 @@ export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:+$FZF_DEFAULT_OPTS }--tmux center,80
 # (repo: github.com/lincheney/fzf-tab-completion, cloned to ~/repos by install.sh)
 source ~/repos/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf_completion
+
+## Z move around 
+source ~/repos/z/z.sh
+
+## alias file
+source ~/.config/zsh/alias.sh
 
 # --- Fedora-packaged plugins ------------------------------------------------
 # Grey suggestion from history as you type; press → (Right arrow) to accept

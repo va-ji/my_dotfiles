@@ -1,0 +1,31 @@
+#!/bin/bash
+# Config editor menu: pick a config, open it via its alias from alias.sh.
+# Each line: <nerd-font icon> <label> <alias>
+
+menu=(
+  $' zsh        zconf'
+  $' aliases    aconf'
+  $' zshenv     zenv'
+  $' nvim       nvconf'
+  $' alacritty  alconf'
+  $' tmux       tconf'
+  $' sway       swconf'
+  $' waybar     wbconf'
+  $' waybar-css wbcss'
+  $' wofi       woconf'
+  $' mako       mkconf'
+  $' git        gconf'
+  $' gitignore  gignore'
+)
+
+# Show "icon label" in wofi, get the label back.
+pick=$(printf '%s\n' "${menu[@]}" | awk '{print $1, $2}' \
+  | wofi --width 350 --height 340 --dmenu --prompt "Edit config" --cache-file /dev/null \
+  | awk '{print $2}')
+[ -z "$pick" ] && exit 0   # Esc
+
+# Find the alias on the line whose label matches.
+cmd=$(printf '%s\n' "${menu[@]}" | awk -v p="$pick" '$2 == p {print $3}')
+
+# -i loads .zshrc (and alias.sh), so the alias exists.
+exec alacritty --title "config: $pick" -e zsh -ic "$cmd"
