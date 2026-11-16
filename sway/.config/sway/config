@@ -26,7 +26,7 @@ set $term alacritty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-set $menu wofi --style=/home/odin/.config/wofi/style.css --conf=/home/odin/.config/wofi/config
+set $menu wofi --style=$HOME/.config/wofi/style.css --conf=$HOME/.config/wofi/config
 
 set $lock_screen  swaylock -f \
 	--screenshots \
@@ -66,6 +66,28 @@ output * bg /usr/share/backgrounds/sway/background.jpg fill
 #Notifications
 exec mako
 
+# Background helpers: these handle wifi password prompts and bluetooth pairing
+# requests (and show tray icons as a fallback).
+exec nm-applet --indicator
+exec blueman-applet
+
+# Open the bar's popups as centered floating windows instead of tiling them
+for_window [app_id="pavucontrol"] floating enable, resize set 800 600
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable, resize set 800 600
+for_window [app_id="blueman-manager"] floating enable, resize set 700 500
+for_window [app_id="nm-connection-editor"] floating enable
+
+# Laptop keys: volume, mic, brightness, media (--locked = work on lock screen too)
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 bindsym Mod4+l exec $lock_screen
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -101,11 +123,11 @@ input * accel_profile flat
 #
     #screen shot
     # Screenshot a window
-    bindsym $mod+Print exec sway-screenshot -m window
+    bindsym $mod+Print exec grimshot --notify savecopy active
     # Screenshot a monitor
-    bindsym Print  exec sway-screenshot -m output
+    bindsym Print exec grimshot --notify savecopy output
     # Screenshot a region
-    bindsym $mod+Shift+Print exec sway-screenshot -m region
+    bindsym $mod+Shift+Print exec grimshot --notify savecopy area
     # Start a terminal
     bindsym $mod+Return exec $term
 
@@ -251,5 +273,4 @@ bar {
 }
 
 
-include /etc/sway/config.d/*clude 
 include /etc/sway/config.d/*

@@ -1,3 +1,8 @@
+[window]
+# 1.0 = solid, 0.0 = invisible. Only the background fades; text stays solid.
+# Sway composites this itself, so no separate compositor is needed.
+opacity = 0.80
+
 [font]
 size = 11.0
 
