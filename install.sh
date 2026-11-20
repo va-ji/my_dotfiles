@@ -14,29 +14,22 @@ if ! command -v dnf >/dev/null; then
   exit 1
 fi
 
-log "Enabling COPR repos"
-# swaylock-effects (blur/clock/screenshot lock screen) is not in Fedora's main repos.
-# vrumger's COPR packages the maintained jirutka fork (v1.7.0.0):
-#   https://github.com/jirutka/swaylock-effects
-sudo dnf copr enable -y vrumger/swaylock-effects
-
 log "Installing system packages"
 sudo dnf install -y \
   git stow curl unzip make gcc cmake \
   neovim ripgrep fd-find fzf nodejs-npm python3 \
   tmux wl-clipboard \
   zsh zsh-autosuggestions zsh-syntax-highlighting \
-  sway swayidle waybar wofi foot grim slurp mako \
+  sway swayidle swaylock waybar wofi foot grim slurp mako \
   alacritty pavucontrol network-manager-applet \
   blueman brightnessctl playerctl \
   grimshot libnotify   # screenshots (grimshot is sway's official helper)
 
-log "Installing swaylock-effects"
-# It ships /usr/bin/swaylock too, so it must replace Fedora's plain swaylock.
-if rpm -q swaylock >/dev/null 2>&1; then
-  sudo dnf swap -y swaylock swaylock-effects
-else
-  sudo dnf install -y swaylock-effects
+log "Ensuring upstream swaylock (not the swaylock-effects fork)"
+# The sway config uses only upstream swaylock options (no --grace/--clock/--effect-*).
+# Older versions of this script installed swaylock-effects from COPR; swap it back.
+if rpm -q swaylock-effects >/dev/null 2>&1; then
+  sudo dnf swap -y swaylock-effects swaylock
 fi
 
 log "Seeding a sway config if the repo has none"
